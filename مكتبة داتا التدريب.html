@@ -1,0 +1,343 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>مكتبة داتا التدريب</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600&family=Reem+Kufi:wght@500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* Layout: ترويسة + شريط فلاتر لاصق + شبكة بطاقات + أقسام مرجعية (خلط، قائمة فحص) */
+:root{
+  --bg:#f3f6f8; --surface:#ffffff; --fg:#13202b; --muted:#566775; --line:#d8e0e6;
+  --accent:#0a6a6a; --accent-soft:#e1f1f0; --on-accent:#ffffff; --warn:#9a4a0b; --warn-soft:#fbeee0;
+  --f-body:"IBM Plex Sans Arabic","Segoe UI",Tahoma,sans-serif;
+  --f-display:"Reem Kufi","IBM Plex Sans Arabic",Tahoma,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0d151b; --surface:#151f27; --fg:#e6edf2; --muted:#9aabb8; --line:#26343f;
+  --accent:#58c4be; --accent-soft:#12312f; --on-accent:#06201f; --warn:#f0a868; --warn-soft:#33220f; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0d151b; --surface:#151f27; --fg:#e6edf2; --muted:#9aabb8; --line:#26343f;
+  --accent:#58c4be; --accent-soft:#12312f; --on-accent:#06201f; --warn:#f0a868; --warn-soft:#33220f; color-scheme:dark}
+body{background:var(--bg);color:var(--fg);font-family:var(--f-body);font-size:15px;line-height:1.7}
+*{box-sizing:border-box}
+.page{max-width:1180px;margin-inline:auto;padding-inline:16px;padding-block:28px 56px}
+header.top{display:grid;gap:10px;margin-bottom:22px}
+h1{font-family:var(--f-display);font-size:clamp(28px,5vw,44px);line-height:1.2;margin:0;text-wrap:balance}
+.lead{color:var(--muted);max-width:68ch;margin:0}
+.note{background:var(--warn-soft);color:var(--warn);border:1px solid var(--line);border-radius:6px;padding:10px 14px;font-size:14px;max-width:80ch}
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);padding-block:12px;border-bottom:1px solid var(--line);display:grid;gap:10px}
+.search{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+input[type=search]{flex:1 1 240px;min-width:0;font:inherit;color:var(--fg);background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:9px 12px}
+input[type=search]:focus-visible,button:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.count{color:var(--muted);font-size:14px;font-variant-numeric:tabular-nums}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{font:inherit;font-size:14px;color:var(--fg);background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:4px 14px;cursor:pointer}
+.chip[aria-pressed=true]{background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
+.chips.use .chip{border-radius:6px;font-size:13px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px;margin-top:18px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:16px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.card h3{margin:0;font-size:17px;font-family:var(--f-mono);font-weight:500;direction:ltr;text-align:right;overflow-wrap:anywhere}
+.meta{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.tag{font-size:12px;border-radius:4px;padding:1px 8px;background:var(--accent-soft);color:var(--accent)}
+.tag.eval{background:var(--warn-soft);color:var(--warn)}
+.size{font-family:var(--f-mono);font-size:13px;color:var(--fg);direction:ltr}
+.desc{margin:0;color:var(--muted);font-size:14px;flex:1}
+.lic{font-size:13px;color:var(--muted)}
+.lic b{color:var(--fg);font-weight:500}
+.act{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
+.btn{font:inherit;font-size:13px;border:1px solid var(--line);background:var(--bg);color:var(--fg);border-radius:6px;padding:4px 12px;text-decoration:none;cursor:pointer}
+.btn.pri{background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
+.empty{grid-column:1/-1;color:var(--muted);padding:30px;text-align:center}
+section.ref{margin-top:44px;display:grid;gap:12px}
+h2{font-family:var(--f-display);font-size:26px;margin:0}
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:8px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:560px;font-size:14px}
+th,td{text-align:right;padding:9px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+th{color:var(--muted);font-weight:500;font-size:13px}
+tr:last-child td{border-bottom:0}
+td.n{font-variant-numeric:tabular-nums;font-family:var(--f-mono);direction:ltr;text-align:right;white-space:nowrap}
+ul.check{margin:0;padding-inline-start:20px;display:grid;gap:6px}
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px}
+.box{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:16px;min-width:0}
+.box h3{margin:0 0 8px;font-size:16px}
+footer{margin-top:40px;color:var(--muted);font-size:13px}
+@media (prefers-reduced-motion:no-preference){.card{transition:border-color .15s}.card:hover{border-color:var(--accent)}}
+</style>
+
+<div class="page" dir="rtl" lang="ar">
+<header class="top">
+  <h1>مكتبة داتا التدريب</h1>
+  <p class="lead">مصادر مفتوحة لتدريب نموذج لغوي من الصفر: ويب، علوم، رياضيات، كتب، تاريخ وتاريخ علوم، كود، تعليمات، أدوات، صور، وتقييم. كل مصدر معاه رابط ومعرّف HuggingFace تنسخه.</p>
+  <p class="note">الأسماء والأحجام والتراخيص مكتوبة من معرفتي وقت الكتابة ومش متحقق منها واحد واحد. راجع صفحة المصدر قبل التحميل، وراجع الترخيص قبل أي استخدام تجاري. الروابط اللي مكتوب عليها "بحث" بتفتح بحث HuggingFace لأني مش متأكد من المعرّف الحالي.</p>
+</header>
+
+<div class="bar">
+  <div class="search">
+    <input id="q" type="search" placeholder="ابحث بالاسم أو الوصف أو المعرّف…" aria-label="بحث">
+    <span class="count" id="count"></span>
+  </div>
+  <div class="chips" id="cats" role="group" aria-label="النوع"></div>
+  <div class="chips use" id="uses" role="group" aria-label="الاستخدام"></div>
+</div>
+
+<main class="grid" id="grid"></main>
+
+<section class="ref">
+  <h2>تغطية التاريخ بحسب المنطقة</h2>
+  <p class="lead">لتغطية تاريخ كل الدول، ابدأ بويكيبيديا بلغة البلد نفسها، وبعدين أضف مصدر محلي لكل منطقة. التغطية مش متساوية: أوروبا وأمريكا الشمالية أغنى بكتير من باقي العالم في الداتا المفتوحة.</p>
+  <div class="tablewrap"><table>
+    <tr><th>المنطقة</th><th>أين تدور</th><th>ملاحظة</th></tr>
+    <tr><td>مصر والعالم العربي</td><td>ويكيبيديا وويكي مصدر بالعربي، OpenITI، Qatar Digital Library، Gallica، Common Corpus</td><td>التراث غني، والتاريخ الحديث (القرن 20) ناقص بسبب حقوق النشر.</td></tr>
+    <tr><td>أوروبا</td><td>Europeana، Gallica، British Library Books، Common Corpus، Wikisource الأوروبية</td><td>أغنى منطقة في الصحف والكتب ملك العام.</td></tr>
+    <tr><td>أمريكا الشمالية</td><td>Chronicling America، American Stories، Gutenberg، HathiTrust</td><td>صحف تاريخية ضخمة بنص مستخرج بـ OCR، وفيها أخطاء.</td></tr>
+    <tr><td>العالم القديم (اليونان، روما، العبرية، الصين)</td><td>Perseus، Sefaria، Chinese Text Project</td><td>نصوص أصلية بلغاتها، وبعضها بدون ترجمة مفتوحة.</td></tr>
+    <tr><td>آسيا وأفريقيا وأمريكا اللاتينية</td><td>ويكيبيديا باللغات المحلية، Wikisource المحلية، أرشيفات وطنية وجامعية</td><td>الداتا المفتوحة أقل بكتير. هتحتاج تشتغل بلد ببلد.</td></tr>
+    <tr><td>تواريخ منظّمة (أحداث، أشخاص، أماكن)</td><td>Wikidata، Seshat، Our World in Data</td><td>بيانات منظّمة، حوّلها لجمل ("حدث كذا في سنة كذا") عشان النموذج يتعلم منها.</td></tr>
+  </table></div>
+  <p class="note">انتبه: الكتب والصحف الملك العام قديمة، فبتحمل وجهات نظر ومصطلحات متحيزة (استعمارية وعنصرية أحياناً) وعلم متجاوز. اخلطها مع مصادر حديثة وفلتر المحتوى الضار، ولا تعتمد عليها وحدها في التاريخ أو العلوم.</p>
+</section>
+
+<section class="ref">
+  <h2>خطة خلط مقترحة</h2>
+  <p class="lead">نقطة بداية للتجارب الصغيرة، مش وصفة نهائية. عدّل النسب بعد ما تجرب وتقيس.</p>
+  <div class="tablewrap"><table>
+    <tr><th>المجموعة</th><th>نسبة من التدريب</th><th>التكرار (epochs)</th><th>ملاحظة</th></tr>
+    <tr><td>ويب منضّف: FineWeb-2 عربي، FineWeb / DCLM / Nemotron-CC إنجليزي</td><td class="n">65–75%</td><td class="n">1×</td><td>كمية كبيرة، مفيش داعي تكرر.</td></tr>
+    <tr><td>علوم وأوراق وكتب مفتوحة (peS2o، arXiv، OpenStax، LibreTexts، FineWeb-Edu)</td><td class="n">10–15%</td><td class="n">2–4×</td><td>الكميات صغيرة، والتكرار لحد ~4 مرات غالباً مفيد.</td></tr>
+    <tr><td>رياضيات (FineMath، OpenWebMath، Proof-Pile-2، MegaMath)</td><td class="n">4–8%</td><td class="n">1–3×</td><td>تحسّن الحل خطوة بخطوة.</td></tr>
+    <tr><td>كود (The Stack v2)</td><td class="n">3–8%</td><td class="n">1×</td><td>بيحسّن الاستدلال والمنطق حتى لو مش هدفك.</td></tr>
+    <tr><td>ويكيبيديا + كتب + تراث عربي + تاريخ (OpenITI، Common Corpus، ويكي مصدر)</td><td class="n">3–5%</td><td class="n">2–3×</td><td>ملك عام، ومنه ألفية ابن مالك.</td></tr>
+    <tr><td>مرحلة أخيرة (آخر 10–20% من التدريب)</td><td class="n">ارفع العلوم والمنهج</td><td class="n">—</td><td>سخّن تدريجياً على الأجود فقط، وجرّبها على نموذج صغير الأول.</td></tr>
+  </table></div>
+</section>
+
+<section class="ref">
+  <h2>قبل ما تحمّل أي حاجة</h2>
+  <div class="two">
+    <div class="box"><h3>الجودة والتكرار</h3>
+      <ul class="check">
+        <li>اعمل إزالة تكرار على الكل مع بعض، لأن ويكيبيديا والكتب موجودة جوه الويب كمان.</li>
+        <li>شيل أسئلة التقييم من داتا التدريب (decontamination) وإلا نتيجتك مش حقيقية.</li>
+        <li>وحّد التشكيل والحروف العربية في كل المصادر (همزات، تاء مربوطة، تطويل).</li>
+        <li>ابني التوكنايزر على عينة ممثلة فيها عربي وإنجليزي ورموز علمية، وثبّته قبل أي توكنزة.</li>
+      </ul></div>
+    <div class="box"><h3>التراخيص والتخزين</h3>
+      <ul class="check">
+        <li>سجّل المصدر والترخيص لكل مستند من أول يوم.</li>
+        <li>الويب العام (Common Crawl وما بُني عليه) حقوقه رمادية. لو بتنشر النموذج أو بتبيعه، اسأل مختص قانوني.</li>
+        <li>Common Pile بُني على نصوص ملك عام ومفتوحة الترخيص عشان كده.</li>
+        <li>مصادر بالتيرابايتات محتاجة تخزين سحابي وتحميل متوازي، مش جهاز واحد.</li>
+      </ul></div>
+    <div class="box"><h3>التحميل</h3>
+      <ul class="check">
+        <li>HuggingFace: <span dir="ltr" style="font-family:var(--f-mono)">huggingface-cli download &lt;id&gt; --repo-type dataset</span> مع <span dir="ltr" style="font-family:var(--f-mono)">hf_transfer</span> لسرعة أعلى.</li>
+        <li>بعض المصادر محتاجة قبول شروط أو تسجيل دخول (gated)، زي The Stack v2 وGPQA.</li>
+        <li>Common Pile وCommon Crawl وويكيميديا: ملفات كبيرة تتحمّل مباشرة من مواقعها.</li>
+      </ul></div>
+  </div>
+</section>
+
+<footer>آخر مراجعة للقائمة: أكتوبر 2026. المصادر بتتغير وبتتحدّث، فتأكد من الصفحة الرسمية لكل واحد.</footer>
+</div>
+
+<script>
+// [الاسم، النوع، الاستخدام(P=تدريب أولي S=ضبط E=تقييم U=أداة)، الحجم، الترخيص، الوصف، معرّف HF (أو "?بحث"), رابط مباشر]
+var CATS={web:"ويب عام",sci:"علوم وأوراق",math:"رياضيات",books:"كتب ومراجع",hist:"تاريخ",histsci:"تاريخ العلوم",ar:"عربي",code:"كود",instr:"تعليمات ومحادثات",agent:"استخدام أدوات",vision:"صور",eval:"تقييم",util:"أدوات المعالجة والتدريب"};
+var USES={P:"تدريب أولي",S:"ضبط (SFT)",E:"تقييم فقط",U:"أداة"};
+var D=[
+["FineWeb","web","P","15T توكن","ODC-By","ويب إنجليزي من Common Crawl بعد تنضيف وإزالة تكرار. أساس معظم النماذج المفتوحة.","HuggingFaceFW/fineweb",""],
+["FineWeb-Edu","web","P","~1.3T توكن (النسخة عالية الجودة)","ODC-By","جزء من FineWeb مفلتر بمصنّف للمحتوى التعليمي. ممتاز للعلوم والمنهج.","HuggingFaceFW/fineweb-edu",""],
+["FineWeb-2","web","P","أكثر من 1000 لغة","ODC-By","ويب متعدد اللغات. فيه arb_Arab للعربي وarz_Arab للمصري.","HuggingFaceFW/fineweb-2","https://arxiv.org/abs/2506.20920"],
+["DCLM-Baseline","web","P","~4T توكن","تحقق","ويب إنجليزي مفلتر بمصنّف جودة، من مشروع DataComp-LM.","mlfoundations/dclm-baseline-1.0",""],
+["RedPajama-Data-V2","web","P","~30T توكن (بعد dedup)","تحقق","لقطات Common Crawl بخمس لغات أوروبية مع إشارات جودة جاهزة لكل مستند، تفلتر بيها بنفسك. مفيهوش عربي.","togethercomputer/RedPajama-Data-V2",""],
+["Nemotron-CC","web","P","~6.3T توكن","تحقق","Common Crawl من NVIDIA مع إعادة صياغة synthetic لرفع الجودة.","?Nemotron-CC",""],
+["Dolma","web","P","~3T توكن","تحقق","داتا OLMo: ويب وكتب وكود وأوراق وويكيبيديا، ومعاها أدوات المعالجة.","allenai/dolma",""],
+["CulturaX","web","P","~6.3T توكن، 167 لغة","تحقق","mC4 وOSCAR منضّفين ومجمّعين، وفيه عربي.","uonlp/CulturaX",""],
+["HPLT","web","P","عدة تريليونات، 190+ لغة","تحقق","ويب متعدد اللغات من مشروع HPLT الأوروبي، وفيه العربي.","?HPLT",""],
+["OSCAR 23.01","web","P","متعدد اللغات","تحقق","Common Crawl مصنّف بحسب اللغة، وفيه عربي. قد يحتاج قبول شروط.","oscar-corpus/OSCAR-2301",""],
+["C4","web","P","~156B توكن","ODC-By","ويب إنجليزي قديم نسبياً، مناسب للتجارب السريعة.","allenai/c4",""],
+["Common Crawl","web","P","بيتابايتات (خام)","شروط الاستخدام","المصدر الخام اللي بُنيت عليه أغلب الداتا. تحتاج بايبلاين استخراج وتنضيف كامل. ملفات WARC/WET على S3 مجاناً.","","https://commoncrawl.org"],
+["Common Pile v0.1","web","P","8TB","ملك عام / مفتوح","نصوص ملك عام ومفتوحة الترخيص: كتب وأوراق وكود ومحادثات وغيرها. الأسلم قانونياً.","?common-pile","https://arxiv.org/abs/2506.05209"],
+
+["peS2o","sci","P","~40B توكن","ODC-By","أوراق علمية مفتوحة الوصول من Semantic Scholar، منظّفة.","allenai/peS2o",""],
+["S2ORC","sci","P","ملايين الأوراق","تحقق","أوراق علمية بنص كامل مع مراجعها. مصدر peS2o.","?S2ORC",""],
+["arXiv (bulk)","sci","P","ملايين الأوراق","تختلف لكل ورقة","فيزياء ورياضيات وحاسوب بصيغة LaTeX. تنزيل جماعي من arXiv، والتراخيص مختلفة.","","https://info.arxiv.org/help/bulk_data.html"],
+["PubMed Central Open Access","sci","P","ملايين المقالات","تختلف لكل مقال","أحياء وطب. استخدم المجموعات المفتوحة الترخيص فقط.","","https://pmc.ncbi.nlm.nih.gov/tools/openftlist/"],
+["Wikipedia","sci","P","كل اللغات","CC BY-SA","ويكيبيديا بكل اللغات، وهي مصدر معرفة أساسي. استخدم wikimedia/wikipedia أو الـ dumps.","wikimedia/wikipedia","https://dumps.wikimedia.org/"],
+["Stack Exchange","sci","P","عشرات الملايين من الأسئلة","CC BY-SA","فيزياء وكيمياء ورياضيات وأحياء: سؤال وإجابات مفصلة. dumps على Internet Archive.","","https://archive.org/details/stackexchange"],
+["Cosmopedia","sci","P","~28B توكن (v2)","تحقق","نصوص تعليمية مولّدة بنموذج (OpenStax، Khan Academy، WikiHow). synthetic فاخلطها بحذر.","HuggingFaceTB/cosmopedia",""],
+["MIT OpenCourseWare","sci","P","آلاف المقررات","CC BY-NC-SA","محاضرات ومذكرات جامعية. الترخيص غير تجاري، فانتبه.","","https://ocw.mit.edu"],
+
+["OpenStax","books","P","كتب مدرسية وجامعية","CC BY (غالباً)","كتب فيزياء وكيمياء وأحياء ورياضيات بجودة عالية. تأكد من ترخيص كل كتاب.","","https://openstax.org"],
+["LibreTexts","books","P","آلاف الفصول","تختلف","كتب جامعية مفتوحة في كل العلوم.","","https://libretexts.org"],
+["Open Textbook Library","books","P","مئات الكتب","تختلف","فهرس كتب جامعية مفتوحة، مفتوحة الترخيص لكل كتاب.","","https://open.umn.edu/opentextbooks"],
+["Project Gutenberg","books","P","عشرات الآلاف من الكتب","ملك عام","كتب ملك عام (معظمها إنجليزي).","","https://www.gutenberg.org"],
+["Internet Archive","books","P","ملايين الكتب","تختلف","فيه كتب ملك عام بكميات ضخمة. حمّل المفتوحة فقط.","","https://archive.org"],
+["HathiTrust","books","P","ملايين الكتب","ملك عام (جزء منها)","مكتبة رقمية، والجزء الملك عام قابل للتحميل.","","https://www.hathitrust.org"],
+["Wikibooks / Wikisource","books","P","كل اللغات","CC BY-SA / ملك عام","كتب تعليمية ونصوص مصدرية. بتجي ضمن dumps ويكيميديا.","","https://dumps.wikimedia.org/"],
+
+["OpenWebMath","math","P","~14.7B توكن","تحقق","صفحات رياضيات من الويب بصيغة تحافظ على المعادلات.","open-web-math/open-web-math",""],
+["FineMath","math","P","~54B توكن","تحقق","رياضيات من الويب بجودة عالية مع شرح خطوات.","HuggingFaceTB/finemath",""],
+["Proof-Pile-2","math","P","~55B توكن","تحقق","أوراق رياضيات وكود إثبات وOpenWebMath مع بعض.","EleutherAI/proof-pile-2",""],
+["MegaMath","math","P","~371B توكن","تحقق","مجموعة رياضيات ضخمة من الويب والكود والـ synthetic.","?MegaMath",""],
+["NuminaMath-1.5","math","S","~900 ألف مسألة","تحقق","مسائل مسابقات بحلول تفصيلية.","AI-MO/NuminaMath-1.5",""],
+["OpenMathInstruct-2","math","S","~14M مثال","تحقق","مسائل رياضيات بحلول مولّدة بنماذج.","nvidia/OpenMathInstruct-2",""],
+["MetaMathQA","math","S","~395 ألف مثال","MIT","مسائل GSM8K وMATH معاد صياغتها بحلول.","meta-math/MetaMathQA",""],
+["GSM8K","math","S","~7.5 ألف (train)","MIT","مسائل كلامية بحلول خطوة بخطوة. الاختبار بتاعها للتقييم.","openai/gsm8k",""],
+["MATH (Hendrycks)","math","S","~7.5 ألف (train)","تحقق","مسائل مسابقات بحلول، بمستويات صعوبة.","?hendrycks math",""],
+
+["CAMEL Physics","sci","S","~20 ألف","تحقق","أسئلة وأجوبة فيزياء مولّدة بنماذج (CAMEL).","camel-ai/physics",""],
+["CAMEL Chemistry","sci","S","~20 ألف","تحقق","نفس الفكرة للكيمياء.","camel-ai/chemistry",""],
+["CAMEL Biology","sci","S","~20 ألف","تحقق","نفس الفكرة للأحياء.","camel-ai/biology",""],
+["SciQ","sci","S","~13 ألف","CC BY-NC","أسئلة علوم مع فقرة داعمة. الترخيص غير تجاري.","allenai/sciq",""],
+["ARC","sci","S","~7.7 ألف","CC BY-SA","أسئلة علوم مدرسية متعددة الخيارات (Easy وChallenge).","allenai/ai2_arc",""],
+["OpenBookQA","sci","S","~5 آلاف","تحقق","أسئلة علوم تحتاج معرفة عامة.","allenai/openbookqa",""],
+["SciInstruct","sci","S","~254 ألف","تحقق","تعليمات علمية في فيزياء وكيمياء ورياضيات وإثبات.","?SciInstruct",""],
+
+["FineWeb-2 (عربي)","ar","P","arb_Arab / arz_Arab","ODC-By","أكبر ويب عربي منضّف متاح. arz_Arab للهجة المصرية.","HuggingFaceFW/fineweb-2",""],
+["ArabicWeb24","ar","P","عشرات المليارات من التوكنز","تحقق","ويب عربي منضّف من LightOn.","?ArabicWeb24","https://lighton.ai/lighton-blogs/arabicweb24"],
+["101 Billion Arabic Words","ar","P","101B كلمة","تحقق","مجموعة ضخمة من الويب العربي ([الورقة](https://arxiv.org/abs/2405.01590)). تحقق من جودة التنضيف.","?101 billion arabic words","https://arxiv.org/abs/2405.01590"],
+["ويكيبيديا العربية","ar","P","مئات الآلاف من المقالات","CC BY-SA","نص عربي منظم المعرفة. من wikimedia/wikipedia بإعداد 20231101.ar.","wikimedia/wikipedia",""],
+["CulturaX (عربي)","ar","P","ضمن 167 لغة","تحقق","قسم ar من CulturaX.","uonlp/CulturaX",""],
+["OpenITI","ar","P","مئات الملايين من الكلمات","تحقق","مكتبة نصوص عربية وإسلامية تراثية بصيغة مفتوحة، تشمل كتب النحو والأدب.","","https://openiti.org"],
+["Tashkeela","ar","P","~75M كلمة","تحقق","نصوص عربية مشكولة، مفيدة لو عايز التشكيل.","?Tashkeela",""],
+["Aya Dataset","ar","S","~204 ألف مثال بشري","Apache-2.0","تعليمات يدوية بـ 65 لغة، وفيها عربي.","CohereLabs/aya_dataset",""],
+["تعليمات عربية","ar","S","تتغير","تتغير","ابحث في HuggingFace عن تعليمات عربية. الجودة والتراخيص بتتفاوت جداً، وراجع كل واحد.","?arabic instruct",""],
+
+["The Stack v2","code","P","~900B توكن","تراخيص الملفات","كود من GitHub بتراخيص مسموحة. محتاج قبول الشروط.","bigcode/the-stack-v2",""],
+["StarCoderData","code","P","~250B توكن","تحقق","داتا StarCoder: كود ومحادثات GitHub وJupyter.","bigcode/starcoderdata",""],
+
+["Tulu 3 SFT Mixture","instr","S","~939 ألف","تحقق","خليط تعليمات من AI2 يشمل رياضيات وكود وسلامة وأدوات.","allenai/tulu-3-sft-mixture",""],
+["SmolTalk","instr","S","~1M","تحقق","محادثات وتعليمات متنوعة من HuggingFace.","HuggingFaceTB/smoltalk",""],
+["OpenHermes 2.5","instr","S","~1M","تحقق","تعليمات متنوعة، أغلبها synthetic.","teknium/OpenHermes-2.5",""],
+["UltraChat 200k","instr","S","~200 ألف","MIT","محادثات متعددة الأدوار.","HuggingFaceH4/ultrachat_200k",""],
+["WildChat","instr","S","~1M محادثة","تحقق","محادثات حقيقية مع مساعد، متعددة اللغات. راجع شروط الاستخدام والخصوصية.","allenai/WildChat-1M",""],
+["Magpie","instr","S","ملايين","تحقق","تعليمات مولّدة ذاتياً من نماذج مفتوحة.","?Magpie",""],
+
+["xLAM Function Calling 60k","agent","S","60 ألف","تحقق","أمثلة استدعاء أدوات متحقق منها (APIGen).","Salesforce/xlam-function-calling-60k",""],
+["Glaive Function Calling v2","agent","S","~113 ألف","تحقق","أمثلة استدعاء دوال بمحادثات.","glaiveai/glaive-function-calling-v2",""],
+["Hermes Function Calling","agent","S","~11 ألف","تحقق","أمثلة استدعاء أدوات بصيغة Hermes.","NousResearch/hermes-function-calling-v1",""],
+["ToolBench","agent","S","~126 ألف","تحقق","مهام تستخدم 16 ألف واجهة API حقيقية.","?ToolBench",""],
+["Gorilla APIBench","agent","S/E","~17 ألف","تحقق","أمثلة وتقييم لاستدعاء الـ APIs.","?gorilla APIBench",""],
+["Berkeley Function Calling (BFCL)","agent","E","—","تحقق","لوحة ومقياس لتقييم استدعاء الأدوات.","","https://gorilla.cs.berkeley.edu/leaderboard.html"],
+
+["OBELICS","vision","P","141M مستند / ~115B توكن","تحقق","صفحات ويب فيها صور ونص متداخل، لتدريب نماذج الرؤية.","HuggingFaceM4/OBELICS",""],
+["The Cauldron","vision","S","50 مجموعة","تختلف","خليط 50 داتا رؤية-لغة (رسوم بيانية، مستندات، علوم…).","HuggingFaceM4/the_cauldron",""],
+["ScienceQA","vision","S","~21 ألف","CC BY-NC-SA","أسئلة علوم مدرسية بصور وشروحات. غير تجاري.","derek-thomas/ScienceQA",""],
+["AI2D","vision","S/E","~5 آلاف رسم","تحقق","رسوم علوم توضيحية وأسئلة عليها.","lmms-lab/ai2d",""],
+["ChartQA","vision","S","~32 ألف","تحقق","أسئلة على رسوم بيانية.","HuggingFaceM4/ChartQA",""],
+["DocVQA","vision","S","~50 ألف","تحقق","أسئلة على مستندات ممسوحة.","lmms-lab/DocVQA",""],
+["PixMo","vision","S","متنوع","تحقق","وصف وأسئلة صور بجودة عالية من AI2.","?PixMo",""],
+["COYO-700M","vision","P","700M زوج","تحقق","أزواج صورة-وصف من الويب.","kakaobrain/coyo-700m",""],
+["Conceptual Captions","vision","P","~3.3M","تحقق","صور مع وصف من الويب.","google-research-datasets/conceptual_captions",""],
+["Open Images","vision","P","~9M","CC BY (الوصف) / تختلف الصور","صور مصنّفة ومرسومة، من جوجل.","","https://storage.googleapis.com/openimages/web/index.html"],
+["LAION-5B / Re-LAION","vision","P","~5B زوج","تحقق","أزواج صورة-نص ضخمة. فيها جدل قانوني، فراجع نسخة Re-LAION.","?Re-LAION",""],
+
+["Common Corpus","hist","P","~2T توكن (متعدد اللغات)","ملك عام / مفتوح","مجموعة PleIAs: كتب وصحف وأرشيف حكومي ملك عام بلغات كثيرة، فيها كمية كبيرة من النصوص التاريخية.","?Common Corpus",""],
+["Institutional Books","hist","P","مئات الآلاف من الكتب","ملك عام","كتب ملك عام من مكتبة هارفارد الرقمية، بلغات كثيرة.","?Institutional Books",""],
+["British Library Books","hist","P","~25 ألف كتاب","ملك عام","كتب إنجليزية من القرنين 18 و19 رقمنتها المكتبة البريطانية.","TheBritishLibrary/blbooks",""],
+["American Stories","hist","P","عشرات الملايين من المقالات","تحقق","صحف أمريكية تاريخية (1798–1963) من Chronicling America بنص مستخرج.","dell-research-harvard/AmericanStories",""],
+["Chronicling America","hist","P","ملايين صفحات الصحف","ملك عام","أرشيف مكتبة الكونغرس للصحف الأمريكية التاريخية.","","https://chroniclingamerica.loc.gov"],
+["Gallica (BnF)","hist","P","ملايين الوثائق","تختلف","مكتبة فرنسا الرقمية: كتب وصحف ومخطوطات، وفيها مواد عن مصر والعالم العربي.","","https://gallica.bnf.fr"],
+["Europeana","hist","P","ملايين العناصر","تختلف لكل عنصر","بوابة تراث أوروبا الثقافي، وفيها صحف وكتب وصور.","","https://www.europeana.eu"],
+["Qatar Digital Library","hist","P","مئات الآلاف من الصفحات","تحقق","وثائق من أرشيف المكتبة البريطانية عن تاريخ الخليج والعالم العربي.","","https://www.qdl.qa"],
+["Perseus Digital Library","hist","P","نصوص كلاسيكية","تختلف","نصوص يونانية ولاتينية مع ترجمات، لتاريخ الحضارات القديمة.","","https://www.perseus.tufts.edu"],
+["Sefaria","hist","P","نصوص عبرية","تختلف","نصوص يهودية قديمة مع ترجمات، ومفتوحة بمعظمها.","","https://www.sefaria.org"],
+["Chinese Text Project","hist","P","آلاف النصوص","تحقق","نصوص صينية كلاسيكية وتاريخية مع ترجمات جزئية.","","https://ctext.org"],
+["Seshat Global History Databank","hist","P","بيانات منظّمة","CC BY (تحقق)","قاعدة بيانات منظّمة لتاريخ المجتمعات عبر العصور. بيانات مش نصوص، فحوّلها لنص بنفسك.","","https://seshatdatabank.info"],
+["Our World in Data","hist","P","مئات المجموعات","CC BY","إحصاءات تاريخية (سكان، صحة، طاقة، اقتصاد) بسلاسل زمنية طويلة. بيانات مش نصوص.","","https://ourworldindata.org"],
+["Wikidata","hist","P","أكثر من 100M عنصر","CC0","أحداث وأشخاص وتواريخ وأماكن بشكل منظّم. فيه أحداث تاريخية بتواريخها، وتحتاج تحويل لنصوص.","","https://www.wikidata.org/wiki/Wikidata:Database_download"],
+["Wikipedia: تاريخ الدول والأحداث","hist","P","كل اللغات","CC BY-SA","صفحات تاريخ كل بلد ومقالات الأحداث والتسلسلات الزمنية (Timeline of…). ويكيبيديا باللغة المحلية بتغطي بلدها أحسن.","wikimedia/wikipedia","https://dumps.wikimedia.org/"],
+["Wikisource (نصوص تاريخية)","hist","P","كل اللغات","ملك عام","نصوص مصدرية: معاهدات ووثائق وكتب تاريخ، بلغات كثيرة منها العربية.","","https://dumps.wikimedia.org/"],
+["OpenITI (تاريخ وتراجم)","hist","P","مئات الملايين من الكلمات","تحقق","فيه كتب التاريخ العربي والإسلامي والتراجم (زي الطبري وابن خلدون).","","https://openiti.org"],
+["Project Gutenberg (تاريخ)","hist","P","آلاف الكتب","ملك عام","كتب تاريخ وسير ورحلات، معظمها قبل 1930.","","https://www.gutenberg.org/ebooks/subject/"],
+["HathiTrust (تاريخ)","hist","P","ملايين الكتب","ملك عام (جزء منها)","كتب تاريخ بلغات كثيرة، والملك العام منها قابل للتحميل.","","https://www.hathitrust.org"],
+
+["Biodiversity Heritage Library","histsci","P","ملايين الصفحات","تختلف","مكتبة مفتوحة للأدبيات القديمة في الأحياء والتاريخ الطبيعي، من القرن 15 للآن.","","https://www.biodiversitylibrary.org"],
+["Wellcome Collection","histsci","P","مئات الآلاف من العناصر","CC BY (غالباً)","تاريخ الطب والعلوم: كتب ومخطوطات وصور، ونص كثير مفتوح.","","https://wellcomecollection.org"],
+["Smithsonian Open Access","histsci","P","ملايين العناصر","CC0","أرشيف علمي وتقني وبيانات متحفية مفتوحة.","","https://www.si.edu/openaccess"],
+["Science History Institute","histsci","P","مجموعات رقمية","تختلف","وثائق ومخطوطات في تاريخ الكيمياء والعلوم.","","https://digital.sciencehistory.org"],
+["الأعمال الأصلية للعلماء (Gutenberg وWikisource)","histsci","P","كتب أصلية","ملك عام","أعمال نيوتن (Principia)، داروين (أصل الأنواع)، فاراداي، ماكسويل، غاليليو، وغيرهم في ترجمات إنجليزية. ابحث عن كل كتاب بالاسم.","","https://www.gutenberg.org"],
+["Philosophical Transactions (القديمة)","histsci","P","من 1665","ملك عام (القديم)","أقدم مجلة علمية. الأعداد القديمة ملك عام وبتتوفر على Internet Archive وموقع Royal Society.","","https://archive.org/search?query=philosophical+transactions"],
+["Wikipedia: Timeline of science","histsci","P","كل اللغات","CC BY-SA","جداول زمنية للفيزياء والكيمياء والرياضيات والطب والفلك وتاريخ العلماء. بتجيب التواريخ بسرعة.","wikimedia/wikipedia","https://dumps.wikimedia.org/"],
+["العلوم عند العرب (OpenITI)","histsci","P","نصوص تراثية","تحقق","ابن الهيثم والبيروني وابن سينا والخوارزمي وغيرهم لو كتبهم موجودة بصيغة نصية. الجودة بتتفاوت حسب النسخة.","","https://openiti.org"],
+["MMLU","eval","E","~14 ألف","MIT","أسئلة 57 مادة. للتقييم فقط، ما تدرّبش عليها.","cais/mmlu",""],
+["MMLU-Pro","eval","E","~12 ألف","MIT","نسخة أصعب من MMLU بـ 10 خيارات.","TIGER-Lab/MMLU-Pro",""],
+["GPQA","eval","E","~450","CC BY 4.0","أسئلة علوم بمستوى دراسات عليا. محتاج قبول شروط.","Idavidrein/gpqa",""],
+["ArabicMMLU","eval","E","~14 ألف","تحقق","أسئلة مدرسية بالعربي بمواد متعددة.","MBZUAI/ArabicMMLU",""],
+["EXAMS","eval","E","~24 ألف","تحقق","أسئلة امتحانات ثانوية بـ 16 لغة، منها العربي.","mhardalov/exams",""],
+["MATH-500","eval","E","500","تحقق","عينة اختبار قياسية من MATH.","HuggingFaceH4/MATH-500",""],
+["HumanEval","eval","E","164","MIT","مسائل برمجة للتقييم.","openai/openai_humaneval",""],
+["Open Arabic LLM Leaderboard","eval","E","مجموعة اختبارات","تحقق","لوحة ومقاييس لتقييم النماذج العربية.","?Open Arabic LLM Leaderboard",""],
+
+["datatrove","util","U","","Apache-2.0","مكتبة HuggingFace لمعالجة داتا ضخمة بالتوازي (استخراج، فلترة، dedup). استُخدمت لبناء FineWeb.","","https://github.com/huggingface/datatrove"],
+["NeMo Curator","util","U","","Apache-2.0","تنضيف وتصنيف وdedup على GPU من NVIDIA.","","https://github.com/NVIDIA/NeMo-Curator"],
+["Dolma toolkit","util","U","","Apache-2.0","أدوات AI2 لتجهيز داتا التدريب.","","https://github.com/allenai/dolma"],
+["text-dedup","util","U","","MIT","إزالة تكرار تقريبي (MinHash وغيره).","","https://github.com/ChenghaoMou/text-dedup"],
+["fastText language ID","util","U","","CC BY-SA","كشف لغة سريع. للعربي واللهجات، قارنه مع GlotLID.","","https://fasttext.cc/docs/en/language-identification.html"],
+["GlotLID","util","U","","تحقق","كشف لغة يغطي لغات ولهجات أكتر.","","https://github.com/cisnlp/GlotLID"],
+["trafilatura","util","U","","Apache-2.0","استخراج نص نضيف من صفحات HTML.","","https://github.com/adbar/trafilatura"],
+["CAMeL Tools","util","U","","MIT","معالجة عربية: تطبيع، تحليل صرفي، تشكيل، لهجات.","","https://github.com/CAMeL-Lab/camel_tools"],
+["SentencePiece","util","U","","Apache-2.0","تدريب توكنايزر BPE وUnigram.","","https://github.com/google/sentencepiece"],
+["lm-evaluation-harness","util","U","","MIT","تشغيل مقاييس التقييم القياسية على أي نموذج.","","https://github.com/EleutherAI/lm-evaluation-harness"],
+["torchtitan","util","U","","BSD-3","إطار تدريب موزع من PyTorch (FSDP2, tensor, pipeline parallel).","","https://github.com/pytorch/torchtitan"],
+["Megatron-LM","util","U","","تحقق","إطار NVIDIA لتدريب نماذج ضخمة، ومعاه دعم MoE.","","https://github.com/NVIDIA/Megatron-LM"],
+["nanotron","util","U","","Apache-2.0","إطار تدريب موزع بسيط من HuggingFace.","","https://github.com/huggingface/nanotron"],
+["OLMo-core","util","U","","Apache-2.0","مكتبة تدريب AI2 لنماذج OLMo.","","https://github.com/allenai/OLMo-core"],
+["DeepSpeed","util","U","","Apache-2.0","ZeRO وتدريب موزع.","","https://github.com/microsoft/DeepSpeed"]
+];
+
+var st={cat:"all",use:"all",q:""};
+var $=function(i){return document.getElementById(i)};
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"})[c]})}
+function link(r){
+  if(r[7]) return {u:r[7],t:"فتح"};
+  var h=r[6]||"";
+  if(h.charAt(0)==="?") return {u:"https://huggingface.co/datasets?search="+encodeURIComponent(h.slice(1)),t:"بحث في HuggingFace"};
+  if(h) return {u:"https://huggingface.co/datasets/"+h,t:"فتح على HuggingFace"};
+  return null;
+}
+function chips(el,map,key,allLabel){
+  var html='<button class="chip" aria-pressed="true" data-k="all">'+allLabel+'</button>';
+  Object.keys(map).forEach(function(k){html+='<button class="chip" aria-pressed="false" data-k="'+k+'">'+map[k]+'</button>'});
+  el.innerHTML=html;
+  el.addEventListener("click",function(e){
+    var b=e.target.closest(".chip"); if(!b) return;
+    st[key]=b.dataset.k;
+    Array.prototype.forEach.call(el.children,function(c){c.setAttribute("aria-pressed",c===b?"true":"false")});
+    render();
+  });
+}
+function match(r){
+  if(st.cat!=="all"&&r[1]!==st.cat) return false;
+  if(st.use!=="all"&&r[2].indexOf(st.use)<0) return false;
+  if(st.q){var t=(r[0]+" "+r[5]+" "+r[6]+" "+CATS[r[1]]+" "+r[4]).toLowerCase(); if(t.indexOf(st.q)<0) return false;}
+  return true;
+}
+function copy(text,btn){
+  function ok(){var o=btn.textContent;btn.textContent="اتنسخ";setTimeout(function(){btn.textContent=o},1200)}
+  function fb(){var ta=document.createElement("textarea");ta.value=text;document.body.appendChild(ta);ta.select();try{document.execCommand("copy");ok()}catch(e){}document.body.removeChild(ta)}
+  if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(text).then(ok,fb)}else fb();
+}
+function render(){
+  var list=D.filter(match), g=$("grid"), html="";
+  list.forEach(function(r,i){
+    var L=link(r), id=(r[6]&&r[6].charAt(0)!=="?")?r[6]:"";
+    var uses=r[2].split("/").map(function(u){return '<span class="tag'+(u==="E"?' eval':'')+'">'+USES[u]+'</span>'}).join("");
+    html+='<article class="card"><h3>'+esc(r[0])+'</h3><div class="meta"><span class="tag">'+CATS[r[1]]+'</span>'+uses+(r[3]?'<span class="size">'+esc(r[3])+'</span>':'')+'</div>'
+      +'<p class="desc">'+esc(r[5]).replace(/\[([^\]]+)\]\(([^)]+)\)/g,"$1")+'</p>'
+      +(r[4]?'<div class="lic">الترخيص: <b>'+esc(r[4])+'</b></div>':'')
+      +'<div class="act">'+(L?'<a class="btn pri" href="'+esc(L.u)+'" target="_blank" rel="noopener">'+L.t+'</a>':'')
+      +(id?'<button class="btn" data-copy="'+esc(id)+'">نسخ المعرّف</button>':'')+'</div></article>';
+  });
+  g.innerHTML=html||'<div class="empty">مفيش نتائج. جرّب كلمة تانية أو شيل الفلتر.</div>';
+  $("count").textContent=list.length+" من "+D.length+" مصدر";
+}
+$("grid").addEventListener("click",function(e){var b=e.target.closest("[data-copy]");if(b)copy(b.dataset.copy,b)});
+$("q").addEventListener("input",function(e){st.q=e.target.value.trim().toLowerCase();render()});
+chips($("cats"),CATS,"cat","الكل");
+chips($("uses"),USES,"use","كل الاستخدامات");
+render();
+</script>
+
+</body></html>
